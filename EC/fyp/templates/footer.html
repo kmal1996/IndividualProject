@@ -1,0 +1,198 @@
+{% load static %}
+
+<!-- load necessary javascripts libraries-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
+    integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+
+<!--define necessary variables-->
+<script type="text/javascript">
+    let tags;
+    let msg;
+    let voices;
+   let screenReader = false;
+    
+   //when the document is ready
+    $(document).ready(function () {
+
+        //get URLS parameters
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Check if the "paramName" parameter is present
+        if (urlParams.has('msg')) {
+            // Show alert message
+            alert('Registration Successfull!');
+        }
+        //load the cart from localstorage
+        let cart = JSON.parse(localStorage.getItem('cart'));
+        //if the cart is empty
+        cart == null ? (cart = {
+            //create an empty cart
+            "total": 0,
+            "items": []
+
+            //save the cart to the localstorage, other wise parse the cart from localstorage
+        }, localStorage.setItem('cart', JSON.stringify(cart))) : cart = JSON.parse(localStorage.getItem('cart'));
+
+        //if the cart has items , show the number of items in the cart, otherwise hide the badge
+        cart.items.length > 0 ? $(".badge").html(cart.items.length) : $(".badge").addClass("d-none")
+        //when the default button is clicked 
+        $("#btnADefault").on("click", function () {
+            // $("h1, p, span, h2, h3, h4, h5, h6").css("transform", "scale(1.2)");
+            //reset the website appearance to default
+            $(".product").css("border","1px solid black");
+            $("body").css("font-size", "62.5%");
+            $("body").css("color", "");
+            $("body").css("background", "");
+            $("h1, h2, h3, h4, h5, h6").css("color", "black");
+        });
+        //when the a1 button is clicked 
+        $("#btnA1").on("click", function () {
+            // $("h1, p, span, h2, h3, h4, h5, h6").css("transform", "scale(1.2)");
+            //change the website appearance to a1
+            $(".product").css("border","1px solid black");
+            $("body").css("font-size", "75%");
+            $("body").css("color", "");
+            $("body").css("background", "");
+            $("h1, h2, h3, h4, h5, h6").css("color", "black");
+        });
+        $("#btnA2").on("click", function () {
+            // $("h1, p, span, h2, h3, h4, h5, h6").css("transform", "scale(1.2)");
+            $("body").css("background", "black");
+            $("body").css("font-size", "62.5%");
+            $("body").css("color", "white");
+            $("h1, h2, h3, h4, h5, h6").css("color", "yellow");
+            $(".product").css("border","1px solid white");
+        });
+        $("#btnA3").on("click", function () {
+            // $("h1, p, span, h2, h3, h4, h5, h6").css("transform", "scale(1.2)");
+            $("body").css("background", "black");
+            $("body").css("font-size", "75%");
+            $("body").css("color", "white");
+            $("h1, h2, h3, h4, h5, h6").css("color", "yellow");
+            $(".product").css("border","1px solid white");
+        });
+        $("label, button, span, a, p, h1, h2, h3, h4, h5, h6").attr("sp", 0);
+        msg = new SpeechSynthesisUtterance();
+        voices = speechSynthesis.getVoices();
+        msg.voice = voices[0];
+        // tags = $("h1, h2, h3, h4, h5, h6, span, label, button, a, p");
+        // tags.each(function () {
+        //     $(this).on("click", function (e) {
+        //         msg.text = $(this).text();
+        //         $(this).css("background-color", "yellow");
+        //         speechSynthesis.speak(msg);
+
+        //         let interval = setInterval(() => {
+        //             if (!speechSynthesis.speaking) {
+        //                 $(this).css("background-color","");
+        //                 // tag.style.removeProperty("background-color");
+        //                 clearInterval(interval);
+        //             }
+        //         }, 100)
+        //     })
+        // });
+        // updateList();
+
+
+        //this code attach a click event listener to the element with the class .btnReader
+        //when the button is clicked it checks the value of the variable screen reader
+        //if it is false change it to true, change the text of button and calls the updatelist function
+        //if it is true change it to false and change the text of the button back to it's orginal state
+
+       $(".btnReader").on("click", function () {
+            if (screenReader == false) {
+                screenReader = true;
+                $(this).html("Turn Off Screen Reader");
+                // console.log(tags.length)
+                updateList();
+
+            }
+            else {
+                screenReader = false;
+                $(this).html("Turn On Screen Reader");
+            }
+        })    
+
+
+    
+
+    });
+
+
+    //this function udpates the list of tags that the screen reader can read , reset the tags array to an empty array
+    //get all of the elements that the screen reader should read 
+    //iterate over each tag in the array
+    //check if the tag has already been read
+    //if the tag hasn't been read, add sp attribute to it and add a click event listener that calls the speaktext function
+
+
+    function updateList(call) {
+        tags = [];
+        tags = document.querySelectorAll("label, button, span, a, p, h1, h2, h3, h4, h5, h6");
+        tags.forEach((tag) => {
+            let val = tag.getAttribute("sp");
+            console.log(val);
+            if (val == 0 || val == null) {
+                tag.setAttribute("sp", 1);
+                tag.addEventListener("click", function (e) {
+                    speakText(e, tag);
+                });
+            }
+
+        })
+    }
+
+    //this function speaks the text of the clicked tag if the screen reader is turned on 
+    //set the message text to the inner text of the clicked element
+    //check that the clicked element is not one of the buttons that turn the screen reader on or Off
+    //change the 
+    function speakText(e, tag) {
+        if (screenReader == true) {
+            msg.text = e.target.innerText;
+            if (e.target.innerText != "Turn Off Screen Reader" && e.target.innerText != "Turn On Screen Reader") {
+
+                //change the background colour of the clicked element to yellow to indicate that it is being read 
+                tag.style.backgroundColor = "yellow";
+                //speak the message using the browser built in text to speech functionality 
+                speechSynthesis.speak(msg);
+
+                //set an interval that checks if the message is still being spoken
+                //once it is finished change the background colour back to it's original
+                let interval = setInterval(() => {
+                    if (!speechSynthesis.speaking) {
+                        tag.style.removeProperty("background-color");
+                        clearInterval(interval);
+                    }
+                }, 100)
+            }
+        }
+    }
+    window.updateList = updateList;
+    window.tags = tags;
+
+</script>
+{% if title == "Products" %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/js/all.min.js" integrity="sha512-2bMhOkE/ACz21dJT8zBOMgMecNxx0d37NND803ExktKiKdSzdwn+L7i9fdccw/3V06gM/DBWKbYmQvKMdAA9Nw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{% static 'js/logic.js' %}"></script>
+{% elif title == "Cart" %}
+<script src="{% static 'js/cart.js' %}"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+{% endif %}
+
+</body>
+
+</html>
+
+<script>
+    
+$(".btnAccessibility").on('click',function(){
+    $(".accessibilityBox").slideToggle();
+})
+</script>

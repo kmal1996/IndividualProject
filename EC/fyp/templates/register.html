@@ -1,0 +1,55 @@
+<html lang="en">
+    {% load static %}
+<head>
+    <title>Registeration Form</title>
+    <link rel="stylesheet" href="{% static 'css/mainpagestyle.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/alertify.js/0.3.11/alertify.default.min.css"
+        integrity="sha512-wUS5ozkpB4c5aUrsfvYhDl6hc2oOC2AZbsKzym3DmOhBvCHs626N/NMxOdarpDKeJ1eq9cwZwNKTc3ELRnJbfQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/alertify.js/0.3.11/alertify.core.min.css"
+        integrity="sha512-JQUnm7fl0rXYdnCc1hDC9d1lAWnJezXv3unSwUIGWKyD5xl+zj8ekMI/Z2fQKemXmM670/QVe8mNcGOZvuOPjQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body onload='document.form1.text1.focus()'>
+    <div class="bgimg1">
+        <form class="form_container" method="post" action="" name="form1" id="form1">
+            {% csrf_token %}
+            <h1>Customer Registeration</h1>
+            <input type="text" placeholder="Enter Name" id="name" name="name" required
+                title="">
+            <input type="text" placeholder="Enter National Id" id="ID" name="ID" requireds patternn="^[0-9-]+$"
+                title="Naional ID can contain only numbers">
+            <br>
+            <input type="password" placeholder="Enter Password" id="pass" name="pass" required pattern="^[a-zA-Z0-9-]+$">
+            <br><br>
+            <input type="hidden" name="action" value="register">
+            <!-- <?php if (isset($_SESSION['error'])) {
+                echo "<h5>" . $_SESSION['error'] . "</h5>";
+            }?> -->
+            <button type="submit" class="btn2">Submit</button>
+        </form>
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/alertify.js/0.3.11/alertify.min.js"
+        integrity="sha512-2R8JJ9GapQ1VCvcazWIP4F7rOrMs6mzorqtZlXpvakAU0O/iw4n90CFrmG9+BwI//xxtnHxb5rbpkIF2s6z39w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    
+
+    function allnumeric(inputtxt, inputtxt2) {
+        var numbers = /^[a-zA-Z0-9-]+$/;
+        if (inputtxt.value.match(numbers)) {
+            alertify.myAlert('Login Successfully');
+            document.form1.text1.focus();
+            return true;
+        } else {
+            alertify.myAlert('Please input numeric and alphabhest only');
+            document.form1.text1.focus();
+            return false;
+        }
+    }
+</script>
+
+</html>

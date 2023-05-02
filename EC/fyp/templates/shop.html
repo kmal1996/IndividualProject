@@ -1,0 +1,38 @@
+<!-- <?php
+session_start();
+if (isset($_SESSION['success'])) {
+    echo "<script>alert('" . $_SESSION['success'] . "');</script>";
+    unset($_SESSION['success']);
+}
+$title = "Products";
+// if user has come here with no categories selected or search query, then all products will be shown other wise category based products will be shown or search query based.
+if (isset($_GET['cat'])) {
+    $title = $_GET['cat'] . " - Products";
+}
+include "./includes/header.php";
+?> -->
+{% include "header.html" %}
+<div class="container-prod">
+    <div class="header">
+        <h1>Products</h1>
+    </div>
+    <div class="products">
+       
+            <div class="image">
+                <img src="-" alt="">
+            </div>
+            <div class="namePrice">
+                <h1></h1>
+                <span></span>
+            </div>
+            <p>Loading...</p>
+            <div class="Add">
+                <button class="prod4" onclick="checkCart(4)" disabled>-</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% include "footer.html" %}
